@@ -27,6 +27,10 @@ const useStyles = makeStyles((theme) => ({
       width: "25ch",
     },
   },
+  table: {
+    maxWidth: "500px",
+    height: "400px",
+  },
 }));
 
 function renderErrorDialog(setShowErrorDialog) {
@@ -111,36 +115,38 @@ function Contacts() {
         </Button>
       </Grid>
       <Divider style={{ marginTop: "50px" }} />
-      <Grid
-        container
-        justify="center"
-        alignItems="center"
-        direction="column"
-        className={classes.root}
-      ></Grid>
+
       {
-        <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>First Name</TableCell>
-                <TableCell align="right">Last name</TableCell>
-                <TableCell align="right">Phone number</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {currentState.map((state, i) => (
-                <TableRow key={`${state.phoneNumber}-${i}`}>
-                  <TableCell component="th" scope="row">
-                    {state.firstName}
-                  </TableCell>
-                  <TableCell align="right">{state.lastName}</TableCell>
-                  <TableCell align="right">{state.phoneNumber}</TableCell>
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          direction="column"
+          className={classes.root}
+        >
+          <TableContainer component={Paper} className={classes.table}>
+            <Table aria-label="phone-book-table" size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell>First Name</TableCell>
+                  <TableCell align="right">Last name</TableCell>
+                  <TableCell align="right">Phone number</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {currentState.map((state, i) => (
+                  <TableRow key={`${state.phoneNumber}-${i}`}>
+                    <TableCell component="th" scope="row">
+                      {state.firstName}
+                    </TableCell>
+                    <TableCell align="right">{state.lastName}</TableCell>
+                    <TableCell align="right">{state.phoneNumber}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
       }
     </>
   );
