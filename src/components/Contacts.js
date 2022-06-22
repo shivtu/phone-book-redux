@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { useSelector, useDispatch } from "react-redux";
-import { getAddToPhonebookData } from "./actions/actions";
+import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteFromPhoneBook, addToPhoneBook } from './actions/actions';
 import {
   Button,
   Dialog,
@@ -18,18 +18,18 @@ import {
   TableRow,
   TextField,
   Paper,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    "& .MuiTextField-root": {
+    '& .MuiTextField-root': {
       margin: theme.spacing(1),
-      width: "25ch",
+      width: '25ch',
     },
   },
   table: {
-    maxWidth: "500px",
-    height: "400px",
+    maxWidth: '500px',
+    height: '400px',
   },
 }));
 
@@ -47,9 +47,9 @@ function renderErrorDialog(setShowErrorDialog) {
 
 function Contacts() {
   const classes = useStyles();
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [showErrorDialog, setShowErrorDialog] = useState(false);
 
   const currentState = useSelector((state) => state);
@@ -60,9 +60,9 @@ function Contacts() {
     currentState.find((entry) => entry.phoneNumber === phoneNumber);
 
   const resetForm = () => {
-    setFirstName("");
-    setLastName("");
-    setPhoneNumber("");
+    setFirstName('');
+    setLastName('');
+    setPhoneNumber('');
   };
 
   const handleAddToPhonebook = () => {
@@ -71,9 +71,19 @@ function Contacts() {
       return;
     }
 
-    dispatch(getAddToPhonebookData({ firstName, lastName, phoneNumber }));
+    dispatch(
+      addToPhoneBook({
+        firstName,
+        lastName,
+        phoneNumber,
+      })
+    );
 
     resetForm();
+  };
+
+  const handleDelContact = (contact) => {
+    dispatch(deleteFromPhoneBook(contact));
   };
 
   return (
@@ -81,66 +91,76 @@ function Contacts() {
       {showErrorDialog && renderErrorDialog(setShowErrorDialog)}
       <Grid
         container
-        justify="center"
-        alignItems="center"
-        direction="column"
+        justify='center'
+        alignItems='center'
+        direction='column'
         className={classes.root}
       >
         <TextField
-          label="Enter first name"
+          label='Enter first name'
           value={firstName}
           onChange={(_e) => setFirstName(_e.target.value)}
-          inputProps={{ "data-testid": "first-name-label" }}
+          inputProps={{ 'data-testid': 'first-name-label' }}
         />
         <TextField
-          label="Enter last name"
+          label='Enter last name'
           value={lastName}
           onChange={(_e) => setLastName(_e.target.value)}
         />
         <TextField
-          type="number"
-          label="Enter phone number"
+          type='number'
+          label='Enter phone number'
           value={phoneNumber}
           onChange={(_e) => setPhoneNumber(_e.target.value)}
-          inputProps={{ "data-testid": "phone-number-label" }}
+          inputProps={{ 'data-testid': 'phone-number-label' }}
         />
         <Button
-          variant="contained"
-          color="primary"
+          variant='contained'
+          color='primary'
           onClick={handleAddToPhonebook}
           disabled={!firstName || !phoneNumber}
-          style={{ width: "25ch" }}
+          style={{ width: '25ch' }}
         >
           Add to contacts
         </Button>
       </Grid>
-      <Divider style={{ marginTop: "50px" }} />
+      <Divider style={{ marginTop: '50px' }} />
 
       {
         <Grid
           container
-          justify="center"
-          alignItems="center"
-          direction="column"
+          justify='center'
+          alignItems='center'
+          direction='column'
           className={classes.root}
         >
           <TableContainer component={Paper} className={classes.table}>
-            <Table aria-label="phone-book-table" size="small">
+            <Table aria-label='phone-book-table' size='small'>
               <TableHead>
                 <TableRow>
                   <TableCell>First Name</TableCell>
-                  <TableCell align="right">Last name</TableCell>
-                  <TableCell align="right">Phone number</TableCell>
+                  <TableCell align='right'>Last name</TableCell>
+                  <TableCell align='right'>Phone number</TableCell>
+                  <TableCell align='right'>Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {currentState.map((state, i) => (
                   <TableRow key={`${state.phoneNumber}-${i}`}>
-                    <TableCell component="th" scope="row">
+                    <TableCell component='th' scope='row'>
                       {state.firstName}
                     </TableCell>
-                    <TableCell align="right">{state.lastName}</TableCell>
-                    <TableCell align="right">{state.phoneNumber}</TableCell>
+                    <TableCell align='right'>{state.lastName}</TableCell>
+                    <TableCell align='right'>{state.phoneNumber}</TableCell>
+                    <TableCell align='right'>
+                      <Button
+                        variant='outlined'
+                        size='small'
+                        onClick={() => handleDelContact(state)}
+                      >
+                        Delete
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

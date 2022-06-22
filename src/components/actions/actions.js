@@ -1,8 +1,15 @@
-export const getAddToPhonebookData = (data) => ({
-  type: "ADD_TO_PHONE_BOOK",
-  payload: {
-    firstName: data.firstName,
-    lastName: data.lastName || "",
-    phoneNumber: data.phoneNumber,
-  },
-});
+import { ADD_TO_PHONE_BOOK, REMOVE_FROM_PHONE_BOOK } from './actionTypes';
+
+export const addToPhoneBook = (data) => {
+  return {
+    type: ADD_TO_PHONE_BOOK,
+    payload: data,
+  };
+};
+
+export const deleteFromPhoneBook = (data) => {
+  return {
+    type: REMOVE_FROM_PHONE_BOOK,
+    payload: data,
+  };
+};
